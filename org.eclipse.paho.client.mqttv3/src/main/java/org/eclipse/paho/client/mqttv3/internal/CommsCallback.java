@@ -53,7 +53,7 @@ public class CommsCallback implements Runnable {
 	private static final String CLASS_NAME = CommsCallback.class.getName();
 	private final Logger log = LoggerFactory.getLogger(LoggerFactory.MQTT_CLIENT_MSG_CAT, CLASS_NAME);
 
-	private static final int INBOUND_QUEUE_SIZE = 10;
+	private static final int INBOUND_QUEUE_SIZE = 1;
 	private MqttCallback mqttCallback;
 	private MqttCallbackExtended reconnectInternalCallback;
 	private final Hashtable<String, IMqttMessageListener> callbacksWildcards; // topicFilter with wildcards -> messageHandler
@@ -373,7 +373,7 @@ public class CommsCallback implements Runnable {
 			// the client protect itself from getting flooded by messages 
 			// from the server.
 			synchronized (spaceAvailable) {
-				while (isRunning() && !isQuiescing() && messageQueue.size() >= INBOUND_QUEUE_SIZE) {
+				while ( !isQuiescing() && messageQueue.size() >= INBOUND_QUEUE_SIZE) {
 					try {
 						// @TRACE 709=wait for spaceAvailable
 						log.fine(CLASS_NAME, methodName, "709");
